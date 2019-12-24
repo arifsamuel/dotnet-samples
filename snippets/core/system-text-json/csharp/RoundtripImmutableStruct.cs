@@ -17,7 +17,6 @@ namespace SystemTextJsonSamples
 
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.WriteIndented = true;
-            //serializeOptions.Converters.Add(new WeatherForecastRequiredPropertyConverter());
             jsonString = JsonSerializer.Serialize(points, serializeOptions);
             Console.WriteLine($"JSON output:\n{jsonString}\n");
 
@@ -31,5 +30,4 @@ namespace SystemTextJsonSamples
             }
         }
     }
-   
 }
