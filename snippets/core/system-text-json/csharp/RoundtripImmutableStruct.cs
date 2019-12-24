@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Schema;
@@ -21,7 +22,7 @@ namespace SystemTextJsonSamples
             Console.WriteLine($"JSON output:\n{jsonString}\n");
 
             var deserializeOptions = new JsonSerializerOptions();
-            deserializeOptions.Converters.Add(new ImmutablePointConverter());
+            deserializeOptions.Converters.Add(new ImmutablePointConverter(deserializeOptions));
             points = JsonSerializer.Deserialize<List<ImmutablePoint>>(jsonString, deserializeOptions);
             Console.WriteLine("Deserialized object values");
             foreach (ImmutablePoint point in points)
