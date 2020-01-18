@@ -43,11 +43,19 @@ namespace RuneSamples
         public static void PrintStringChars()
         {
             // <SnippetPrintStringChars>
+            // <SnippetHello>
             PrintChars("Hello");
+            // </SnippetHello>
+            // <SnippetNiHao>
             PrintChars("你好");
+            // </SnippetNiHao>
+            // <SnippetOsage>
             PrintChars("𐓏𐓘𐓻𐓘𐓻𐓟 𐒻𐓟");
+            // </SnippetOx>
             PrintChars("🐂");
+            // </SnippetOx>
 
+            // <SnippetPrintChars>
             static void PrintChars(string s)
             {
                 Console.WriteLine($"\"{s}\".Length = {s.Length}");
@@ -57,6 +65,7 @@ namespace RuneSamples
                 }
                 Console.WriteLine();
             }
+            // </SnippetPrintChars>
             // </SnippetPrintStringChars>
         }
 
