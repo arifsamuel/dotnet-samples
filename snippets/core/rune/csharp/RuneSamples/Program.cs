@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Text;
 using System.Linq;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace RuneSamples
 {
@@ -73,10 +74,17 @@ namespace RuneSamples
         {
 
             // <SnippetConvertToUpper>
-            string testString = "𐑉";
+            string testString = "abc𐑉";
+            Console.WriteLine($"String to be converted to uppercase: {testString}");
             PrintChars(testString);
-            PrintChars(ConvertToUpper(testString));
-            PrintChars(ConvertToUpperBadExample(testString));
+
+            string testStringUppercase = ConvertToUpper(testString);
+            Console.WriteLine($"String converted to uppercase using correct code: {testStringUppercase}");
+            PrintChars(testStringUppercase);
+
+            testStringUppercase = ConvertToUpperBadExample(testString);
+            Console.WriteLine($"String converted to uppercase using incorrect code: {testStringUppercase}");
+            PrintChars(testStringUppercase);
 
             // <SnippetConvertToUpperGoodExample>
             static string ConvertToUpper(string input)
@@ -165,7 +173,6 @@ namespace RuneSamples
 
                 // First, append chunks in multiples of 20 chars
                 // followed by a newline.
-
                 int i = 0;
                 for (; i < input.Length - 20; i += 20)
                 {
@@ -174,13 +181,13 @@ namespace RuneSamples
                 }
 
                 // Then append any leftover data followed by
-                // one final newline.
-
+                // a final newline.
                 builder.Append(input, i, input.Length - i);
                 builder.AppendLine(); // newline
 
                 return builder.ToString();
             }
+            // </InsertNewlinesBadExample>
             static void PrintChars(string s)
             {
                 Console.WriteLine($"\"{s}\"\nLength = {s.Length}");
@@ -435,20 +442,27 @@ namespace RuneSamples
         // .NET refers to these as "text elements".
         public static void CountTextElements()
         {
-            string emoji = "👩🏽‍🚒";
+            PrintTextElementCount("á");
+            PrintTextElementCount("á");
+            PrintTextElementCount("👩🏽‍🚒");
 
-            Console.WriteLine($"Number of characters: {emoji.Length}"); // displays 7
-            Console.WriteLine($"Number of runes: {emoji.EnumerateRunes().Count()}");  // displays 4
-
-            TextElementEnumerator enumerator = StringInfo.GetTextElementEnumerator(emoji);
-
-            int textElementCount = 0;
-            while (enumerator.MoveNext())
+            //string emoji = "áá"; //\u0065\u0301
+            static void PrintTextElementCount(string s)
             {
-                textElementCount++;
-            }
+                Console.WriteLine(s);
+                Console.WriteLine($"Number of chars: {s.Length}");
+                Console.WriteLine($"Number of runes: {s.EnumerateRunes().Count()}");
 
-            Console.WriteLine($"Number of text elements: {textElementCount}");  // displays 1
+                TextElementEnumerator enumerator = StringInfo.GetTextElementEnumerator(s);
+
+                int textElementCount = 0;
+                while (enumerator.MoveNext())
+                {
+                    textElementCount++;
+                }
+
+                Console.WriteLine($"Number of text elements: {textElementCount}");
+            }
         }
 
     }
