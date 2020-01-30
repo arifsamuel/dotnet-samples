@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace RuneSamples
 {
-    class Program
+    partial class Program
     {
         static void Main(string[] args)
         {
@@ -35,10 +35,9 @@ namespace RuneSamples
 
             ConvertToUtf8Utf16(new Rune("🐂".ToCharArray()[0], "🐂".ToCharArray()[1]));
             SplitStringOnCharValue();
-            Console.WriteLine("-----");
 
+            Console.WriteLine("----- Count text elements");
             CountTextElements();
-            Console.WriteLine("-----");
 
         }
         public static void PrintStringChars()
@@ -126,87 +125,7 @@ namespace RuneSamples
 
         }
 
-        public static void InsertNewlines()
-        {
 
-            // <SnippetInsertNewlines>
-            string testString = "The quick brown fox jumped over a lazy 🐕";
-            PrintChars(testString);
-            string newString = InsertNewlinesEveryTwentychars(testString);
-            PrintChars(newString);
-            newString = InsertNewlinesEveryTwentycharsBadExample(testString);
-            PrintChars(newString);
-
-            // <SnippetInsertNewlinesGoodExample>
-            static string InsertNewlinesEveryTwentychars(string input)
-            {
-                StringBuilder builder = new StringBuilder();
-
-                // Append chunks in multiples of 20 chars
-
-                TextElementEnumerator enumerator = StringInfo.GetTextElementEnumerator(input);
-
-                int textElementCount = 0;
-                while (enumerator.MoveNext())
-                {
-                    builder.Append(enumerator.Current);
-                    if (textElementCount % 20 == 0 && textElementCount > 0)
-                    {
-                        builder.AppendLine(); // newline
-                    }
-                    textElementCount++;
-                }
-
-                // Add a final newline.
-                builder.AppendLine(); // newline
-                return builder.ToString();
-
-            }
-            // </InsertNewlinesGoodExample>
-
-            // <InsertNewlinesBadExample>
-            // THE FOLLOWING METHOD SHOWS INCORRECT CODE.
-            // DO NOT DO THIS IN A PRODUCTION APPLICATION.
-            static string InsertNewlinesEveryTwentycharsBadExample(string input)
-            {
-                StringBuilder builder = new StringBuilder();
-
-                // First, append chunks in multiples of 20 chars
-                // followed by a newline.
-                int i = 0;
-                for (; i < input.Length - 20; i += 20)
-                {
-                    builder.Append(input, i, 20);
-                    builder.AppendLine(); // newline
-                }
-
-                // Then append any leftover data followed by
-                // a final newline.
-                builder.Append(input, i, input.Length - i);
-                builder.AppendLine(); // newline
-
-                return builder.ToString();
-            }
-            // </InsertNewlinesBadExample>
-            static void PrintChars(string s)
-            {
-                Console.WriteLine($"\"{s}\"\nLength = {s.Length}");
-                for (int i = 0; i < s.Length; i++)
-                {
-                    Console.WriteLine((int)s[i] switch
-                    {
-                        10 => "LF",
-                        13 => "CR",
-                        _ => $"s[{i}] = '{s[i]}' ('\\u{(int)s[i]:x4}')"
-                    });
-                }
-                Console.WriteLine();
-            }
-            // </InsertNewlinesBadExample>
-
-            // <InsertNewlines>
-
-        }
         public static void InstantiateRunes()
         {
             Rune a = new Rune('a'); // OK, 'a' (U+0061) is a valid scalar value.
@@ -436,34 +355,5 @@ namespace RuneSamples
             string[] splitOnComma = inputString.Split(',');
             Array.ForEach(splitOnComma, s => Console.WriteLine(s));
         }
-
-        // This method demonstrates counting the number of display characters in a string.
-        // In the Unicode technical documentation, these are called "grapheme clusters".
-        // .NET refers to these as "text elements".
-        public static void CountTextElements()
-        {
-            PrintTextElementCount("á");
-            PrintTextElementCount("á");
-            PrintTextElementCount("👩🏽‍🚒");
-
-            //string emoji = "áá"; //\u0065\u0301
-            static void PrintTextElementCount(string s)
-            {
-                Console.WriteLine(s);
-                Console.WriteLine($"Number of chars: {s.Length}");
-                Console.WriteLine($"Number of runes: {s.EnumerateRunes().Count()}");
-
-                TextElementEnumerator enumerator = StringInfo.GetTextElementEnumerator(s);
-
-                int textElementCount = 0;
-                while (enumerator.MoveNext())
-                {
-                    textElementCount++;
-                }
-
-                Console.WriteLine($"Number of text elements: {textElementCount}");
-            }
-        }
-
     }
 }
